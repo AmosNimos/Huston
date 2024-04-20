@@ -23,7 +23,6 @@ huston [-h] [-r] [-g] [-b] [-H HEX | -R RED -G GREEN -B BLUE] [-c] [-p] [-w] [-y
 - `-G GREEN`: Set the text color using the specified GREEN value (0-255).
 - `-B BLUE`: Set the text color using the specified BLUE value (0-255).
 
-
 ## Examples
 
 ```bash
@@ -50,12 +49,21 @@ Print 'Hello, world!' in dark red text.
 
 `huston` supports reading input from a pipe, allowing you to use it in combination with other commands.
 
-## Author
+## Project Details
 
-Amosnimos
+- **Language**: Bash
+- **Compatibility**: Linux systems only
+- **Tested On**: Debian-based systems (Ubuntu 20.04.6 LTS x86_64)
+  
+## Dependencies
+This project requires the <a href="https://github.com/AmosNimos/flag">flag</a> script for parsing command-line arguments. Make sure to have the flag script installed and accessible in your PATH.
 
 ## License
 
-MIT License
+This software is released under the MIT License. See the `LICENSE` file for more details.
+
+## Author
+
+This software was created by Amosnimos.
 
 ---
