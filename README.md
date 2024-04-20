@@ -5,7 +5,7 @@ A Bash script that enhances terminal output with colorful text. It allows you to
 ## Usage
 
 ```
-huston [-h] [-r] [-g] [-b] [-H HEX | -R RED -G GREEN -B BLUE] [-c] [-p] [-w] [-y] TEXT
+huston [-h] [-r] [-g] [-b] [-H HEX | -R RED -G GREEN -B BLUE] [-c] [-p] [-w] [-y] [-F FILE] [-T TEXT] TEXT
 ```
 
 ### Options
