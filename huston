@@ -1,0 +1,231 @@
+#!/bin/bash
+################################################################################
+# Name:        huston
+# Date:        2024-04-19
+# Author:      Amosnimos
+# Description: Enhances terminal output with colorful text
+################################################################################
+
+#
+#    ▄█    █▄    
+#   ███    ███   
+#   ███    ███   
+#  ▄███▄▄▄▄███▄▄ 
+# ▀▀███▀▀▀▀███▀  
+#   ███    ███   
+#   ███    ███   
+#   ███    █▀    
+#               
+
+# ▌ ▌▌ ▌▞▀▖▀▛▘▞▀▖▙ ▌
+# ▙▄▌▌ ▌▚▄  ▌ ▌ ▌▌▌▌
+# ▌ ▌▌ ▌▖ ▌ ▌ ▌ ▌▌▝▌
+# ▘ ▘▝▀ ▝▀  ▘ ▝▀ ▘ ▘
+
+# Include the flag utility
+. flag
+# Parsing argument to variables
+flag "$@"
+
+print_help() {
+    echo "Usage: huston [-h] [-r][-g][-b] [-H HEX | -R RED -G GREEN -B BLUE] [-c] [-p] [-w] [-y] TEXT"
+    echo
+    echo "Options:"
+    echo "  -h, --help             Display this help message"
+    echo "  -H <HEX>,          Set text color to the specified HEX value (e.g., 'ffffff')"
+    echo "  -K <HEX>,               Set BACKGROUND color to the specified HEX value (e.g., 'ffffff')"
+    echo
+    echo "  -R <VALUE>,  RED          Set text color using RGB values (0-255)"
+    echo "  -G <VALUE>,  GREEN          Set text color using RGB values (0-255)"
+    echo "  -B <VALUE>,  BLUE          Set text color using RGB values (0-255)"
+    echo
+    echo "  -r  (RED)        Set text color to red"
+    echo "  -g  (GREEN)        Set text color to green"
+    echo "  -b  (BLUE)        Set text color to blue"
+    echo "  -c  (CYAN)                   Set text color to cyan"
+    echo "  -p  (PINK)                   Set text color to pink"
+    echo "  -w  (WHITE)                   Set text color to white"
+    echo "  -y  (YELLOW)                   Set text color to yellow"
+    echo
+    echo "Examples:"
+    echo "  huston -r -T 'Hello, world!'           # Print 'Hello, world!' in red text"
+    echo "  huston -R 255 -T 'Hello, world!'        # Same as above"
+    echo "  huston -H FF0000 -T 'Hello, world!'    # Same as above"
+    echo "  echo 'Hello, world!' | huston -R 155" # Print 'Hello, world!' in dark red text
+    return 0
+}
+
+# Check if any argument is "--help" and display help message
+if [[ -n $flag_h || "${@,,}" == *"help" ]]; then
+  print_help
+  exit 0
+fi
+
+# Set default RGB values
+RED=0
+GREEN=0
+BLUE=0
+B_RED=0
+B_GREEN=0
+B_BLUE=0
+
+TEXT=""
+
+# Default BACKGROUND color
+BACKGROUND_COLOR=""
+FOREGROUND_COLOR=""
+
+# Take the text from pipe
+read_pipe() {
+    text=""
+
+    # Read the pipe into a variable
+    while IFS= read -r line; do
+        if [ -z "$text" ]; then
+            text="$line"
+        else
+            text="$text\n$line"
+        fi
+    done
+
+    echo "$text"
+}
+
+# Assign pipe to text
+if [ ! -t 0 ]; then
+    TEXT=$(read_pipe)
+fi
+
+
+# Take the text from argument
+if [[ -n $flag_T ]]; then
+    TEXT=$flag_T
+fi
+
+# Take RGB value from flags
+if [[ -n $flag_R ]]; then
+    if [[ $flag_R -ge 0 && $flag_R -le 255 ]]; then
+        RED=$flag_R
+    else
+        echo "ERROR: Invalid value for RED, please use an integer between 0 and 255"
+        exit 1
+    fi
+fi
+
+if [[ -n $flag_G ]]; then
+    if [[ $flag_G -ge 0 && $flag_G -le 255 ]]; then
+        GREEN=$flag_G
+    else
+        echo "ERROR: Invalid value for GREEN, please use an integer between 0 and 255"
+        exit 1
+    fi
+fi
+
+if [[ -n $flag_B ]]; then
+    if [[ $flag_B -ge 0 && $flag_B -le 255 ]]; then
+        BLUE=$flag_B
+    else
+        echo "ERROR: Invalid value for BLUE, please use an integer between 0 and 255"
+        exit 1
+    fi
+fi
+
+# SINGLE COLOR RGB
+if [[ -n $flag_r ]]; then
+    RED=255
+fi
+if [[ -n $flag_g ]]; then
+    GREEN=255
+fi
+if [[ -n $flag_b ]]; then
+    BLUE=255
+fi
+
+# ADDITIONAL SINGLE COLORS
+
+# CYAN
+if [[ -n $flag_c ]]; then
+    RED=0
+    GREEN=255
+    BLUE=255
+fi
+
+# PINK
+if [[ -n $flag_p ]]; then
+    RED=255
+    GREEN=0
+    BLUE=255
+fi
+
+# WHITE
+if [[ -n $flag_w ]]; then
+    RED=255
+    GREEN=255
+    BLUE=255
+fi
+
+# YELLOW
+if [[ -n $flag_y ]]; then
+    RED=255
+    GREEN=255
+    BLUE=0
+fi
+
+# Set BACKGROUND color
+if [[ -n $flag_K ]]; then
+    HEX=${flag_K#"#"}  # Remove the "#" character if present
+    if [[ ${#HEX} -ne 6 ]]; then
+        echo "ERROR: Invalid HEX color value. Please provide a 6-digit HEX value (e.g., ffffff)"
+        exit 1
+    fi
+
+    # Split the HEX value into pairs of two characters (e.g., "ff" -> "ff ")
+    HEX=$(echo $HEX | sed 's/../& /g')
+    RGB=($(
+        for val in $HEX; do
+            echo "ibase=16; $val"
+        done | bc
+    ))
+
+    B_RED=${RGB[0]}
+    B_GREEN=${RGB[1]}
+    B_BLUE=${RGB[2]}
+
+fi
+
+# Hexadecimal color
+if [[ -n $flag_H ]]; then
+    HEX=${flag_H#"#"}  # Remove the "#" character if present
+    if [[ ${#HEX} -ne 6 ]]; then
+        echo "ERROR: Invalid HEX color value. Please provide a 6-digit HEX value (e.g., ffffff)"
+        exit 1
+    fi
+
+    # Split the HEX value into pairs of two characters (e.g., "ff" -> "ff ")
+    HEX=$(echo $HEX | sed 's/../& /g')
+    RGB=($(
+        for val in $HEX; do
+            echo "ibase=16; $val"
+        done | bc
+    ))
+
+    RED=${RGB[0]}
+    GREEN=${RGB[1]}
+    BLUE=${RGB[2]}
+fi
+
+# Set default color if no color options were provided
+if [[ -z $flag_r && -z $flag_g && -z $flag_b && -z $flag_c && -z $flag_p && -z $flag_w && -z $flag_y && -z $flag_H && -z $flag_R ]]; then
+    RED=255
+    GREEN=255
+    BLUE=255
+fi
+
+BACKGROUND_COLOR="\e[48;2;${B_RED};${B_GREEN};${B_BLUE}m"
+FOREGROUND_COLOR="\e[38;2;${RED};${GREEN};${BLUE}m"
+
+if [[ -z $TEXT ]]; then
+    TEXT="${@: -1}"  # Set TEXT to the last argument
+fi
+
+echo -e "${BACKGROUND_COLOR}${FOREGROUND_COLOR}$TEXT\e[0m"

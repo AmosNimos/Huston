@@ -1,0 +1,80 @@
+.TH huston 1 "April 2024" "1.0" "huston man page"
+
+.SH NAME
+huston \- Enhances terminal output with colorful text
+
+.SH SYNOPSIS
+.B huston
+[\-h] [\-\-help] [\-\-version] [-r] [-g] [-b] [-H \fIHEX\fR | -R \fIRED\fR -G \fIGREEN\fR -B \fIBLUE\fR] [-c] [-p] [-w] [-y] TEXT
+
+.SH DESCRIPTION
+.B huston
+is a command-line utility that enhances terminal output by allowing you to specify text and background colors using RGB values and hexadecimal codes.
+
+.SH OPTIONS
+.TP
+\-h, \-\-help
+Display the help message.
+
+.TP
+\-r
+Set the text color to red.
+
+.TP
+\-g
+Set the text color to green.
+
+.TP
+\-b
+Set the text color to blue.
+
+.TP
+\-H \fIHEX\fR
+Set the text color to the specified HEX value (e.g., 'ffffff').
+
+.TP
+\-R \fIRED\fR
+Set the text color using the specified RED value (0-255).
+
+.TP
+\-G \fIGREEN\fR
+Set the text color using the specified GREEN value (0-255).
+
+.TP
+\-B \fIBLUE\fR
+Set the text color using the specified BLUE value (0-255).
+
+.TP
+\-c
+Set the text color to cyan.
+
+.TP
+\-p
+Set the text color to pink.
+
+.TP
+\-w
+Set the text color to white.
+
+.TP
+\-y
+Set the text color to yellow.
+
+.SH EXAMPLES
+.B huston -r -T 'Hello, world!'
+Print 'Hello, world!' in red text.
+
+.B huston -R 255 -T 'Hello, world!'
+Same as above.
+
+.B huston -H FF0000 -T 'Hello, world!'
+Same as above.
+
+.B echo 'Hello, world!' | huston -R 155
+Print 'Hello, world!' in dark red text.
+
+.SH AUTHOR
+Written by Amosnimos.
+
+.SH COPYRIGHT
+MIT License.
