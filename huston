@@ -28,30 +28,33 @@
 flag "$@"
 
 print_help() {
-    echo "Usage: huston [-h] [-r][-g][-b] [-H HEX | -R RED -G GREEN -B BLUE] [-c] [-p] [-w] [-y] TEXT"
+    echo "Usage: huston [-h] [-r][-g][-b] [-H HEX | -R RED -G GREEN -B BLUE] [-c] [-p] [-w] [-y] [-T TEXT | -F FILE]"
     echo
     echo "Options:"
     echo "  -h, --help             Display this help message"
-    echo "  -H <HEX>,          Set text color to the specified HEX value (e.g., 'ffffff')"
-    echo "  -K <HEX>,               Set BACKGROUND color to the specified HEX value (e.g., 'ffffff')"
+    echo "  -H <HEX>               Set text foreground color to the specified HEX value (e.g., 'ffffff')"
+    echo "  -K <HEX>               Set text background color to the specified HEX value (e.g., 'ffffff')"
+    echo "  -T <TEXT>              Set the text to a string"
+    echo "  -F <FILE>              Set the text to a file content"
     echo
-    echo "  -R <VALUE>,  RED          Set text color using RGB values (0-255)"
-    echo "  -G <VALUE>,  GREEN          Set text color using RGB values (0-255)"
-    echo "  -B <VALUE>,  BLUE          Set text color using RGB values (0-255)"
+    echo "  -R <VALUE>  RED        Set text color using RGB values (0-255)"
+    echo "  -G <VALUE>  GREEN      Set text color using RGB values (0-255)"
+    echo "  -B <VALUE>  BLUE       Set text color using RGB values (0-255)"
     echo
-    echo "  -r  (RED)        Set text color to red"
-    echo "  -g  (GREEN)        Set text color to green"
-    echo "  -b  (BLUE)        Set text color to blue"
-    echo "  -c  (CYAN)                   Set text color to cyan"
-    echo "  -p  (PINK)                   Set text color to pink"
-    echo "  -w  (WHITE)                   Set text color to white"
-    echo "  -y  (YELLOW)                   Set text color to yellow"
+    echo "  -r                      Set text color to red"
+    echo "  -g                      Set text color to green"
+    echo "  -b                      Set text color to blue"
+    echo "  -c                      Set text color to cyan"
+    echo "  -p                      Set text color to pink"
+    echo "  -w                      Set text color to white"
+    echo "  -y                      Set text color to yellow"
     echo
     echo "Examples:"
     echo "  huston -r -T 'Hello, world!'           # Print 'Hello, world!' in red text"
     echo "  huston -R 255 -T 'Hello, world!'        # Same as above"
     echo "  huston -H FF0000 -T 'Hello, world!'    # Same as above"
-    echo "  echo 'Hello, world!' | huston -R 155" # Print 'Hello, world!' in dark red text
+    echo "  echo 'Hello, world!' | huston -R 155    # Print 'Hello, world!' in dark red text"
+    echo "  huston -g -F file.txt                  # Print file content in green text"
     return 0
 }
 
@@ -100,6 +103,9 @@ fi
 # Take the text from argument
 if [[ -n $flag_T ]]; then
     TEXT=$flag_T
+fi
+if [[ -n $flag_F ]]; then
+    TEXT=$(cat $flag_F)
 fi
 
 # Take RGB value from flags
