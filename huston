@@ -221,7 +221,7 @@ if [[ -n $flag_H ]]; then
 fi
 
 # Set default color if no color options were provided
-if [[ -z $flag_r && -z $flag_g && -z $flag_b && -z $flag_c && -z $flag_p && -z $flag_w && -z $flag_y && -z $flag_H && -z $flag_R ]]; then
+if [[ -z $flag_r && -z $flag_g && -z $flag_b && -z $flag_c && -z $flag_p && -z $flag_w && -z $flag_y && -z $flag_H && -z $flag_R && -z $flag_G ]]; then
     RED=255
     GREEN=255
     BLUE=255
