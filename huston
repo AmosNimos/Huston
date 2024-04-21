@@ -22,11 +22,7 @@
 # ▌ ▌▌ ▌▖ ▌ ▌ ▌ ▌▌▝▌
 # ▘ ▘▝▀ ▝▀  ▘ ▝▀ ▘ ▘
 
-# Include the flag utility
-. flag
 # Parsing argument to variables
-flag "$@"
-
 print_help() {
     echo "Usage: huston [-h] [-r][-g][-b] [-H HEX | -R RED -G GREEN -B BLUE] [-c] [-p] [-w] [-y] [-T TEXT | -F FILE]"
     echo
@@ -58,8 +54,12 @@ print_help() {
     return 0
 }
 
+# Include the flag utility
+. flag "$@"
+
+
 # Check if any argument is "--help" and display help message
-if [[ -n $flag_h || "${@,,}" == *"help" ]]; then
+if [[ -n $flag_h || -n $flag_help || "${@,,}" == *"help" ]]; then
   print_help
   exit 0
 fi
@@ -185,39 +185,25 @@ if [[ -n $flag_K ]]; then
         exit 1
     fi
 
-    # Split the HEX value into pairs of two characters (e.g., "ff" -> "ff ")
-    HEX=$(echo $HEX | sed 's/../& /g')
-    RGB=($(
-        for val in $HEX; do
-            echo "ibase=16; $val"
-        done | bc
-    ))
-
-    B_RED=${RGB[0]}
-    B_GREEN=${RGB[1]}
-    B_BLUE=${RGB[2]}
-
+    # Convert HEX to RGB
+    B_RED=$((16#${HEX:0:2}))
+    B_GREEN=$((16#${HEX:2:2}))
+    B_BLUE=$((16#${HEX:4:2}))
 fi
 
 # Hexadecimal color
 if [[ -n $flag_H ]]; then
     HEX=${flag_H#"#"}  # Remove the "#" character if present
     if [[ ${#HEX} -ne 6 ]]; then
-        echo "ERROR: Invalid HEX color value. Please provide a 6-digit HEX value (e.g., ffffff)"
+
+    B_BLUE=$((16#${HEX:4:2}))        echo "ERROR: Invalid HEX color value. Please provide a 6-digit HEX value (e.g., ffffff)"
         exit 1
     fi
 
-    # Split the HEX value into pairs of two characters (e.g., "ff" -> "ff ")
-    HEX=$(echo $HEX | sed 's/../& /g')
-    RGB=($(
-        for val in $HEX; do
-            echo "ibase=16; $val"
-        done | bc
-    ))
-
-    RED=${RGB[0]}
-    GREEN=${RGB[1]}
-    BLUE=${RGB[2]}
+    # Convert HEX to RGB
+    RED=$((16#${HEX:0:2}))
+    GREEN=$((16#${HEX:2:2}))
+    BLUE=$((16#${HEX:4:2}))
 fi
 
 # Set default color if no color options were provided
