@@ -60,7 +60,7 @@ This project requires the <a href="https://github.com/AmosNimos/flag">flag</a> s
 
 ## License
 
-This software is released under the MIT License. See the `LICENSE` file for more details.
+This software is released under the GNU LESSER GENERAL PUBLIC License. See the `LICENSE` file for more details.
 
 ## Author
 
